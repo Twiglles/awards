@@ -1,0 +1,51 @@
+* { box-sizing: border-box; margin: 0; padding: 0 }
+:root { --red: #9F1515; --bg: #E8E6E6; --ink: #2b2b2b }
+html, body { background: var(--bg); color: var(--red) }
+body { font-family: 'Montserrat', sans-serif; min-height: 100vh; position: relative; -webkit-tap-highlight-color: transparent }
+.top, .bot { position: fixed; left: 0; width: 100%; height: 90px; z-index: 0; pointer-events: none; opacity: .9 }
+.top { top: 0; background: url(hills_top.jpg) center top/cover }
+.bot { bottom: 0; background: url(hills_bot.jpg) center bottom/cover }
+.app { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 110px 20px 190px }
+.brand { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: 18px; margin-bottom: 18px }
+h1, h2 { font-weight: 900; text-transform: uppercase; line-height: 1.02; letter-spacing: -.01em }
+h1 { font-size: clamp(34px, 9vw, 58px) }
+h2 { font-size: clamp(26px, 7vw, 40px) }
+.sub { font-weight: 800; font-style: italic; font-size: 20px; line-height: 1.25; margin-top: 14px }
+p.t { font-weight: 600; font-size: 17px; line-height: 1.5; color: var(--ink); margin-top: 18px }
+.hint { font-weight: 600; font-size: 15px; color: var(--ink); margin-top: 10px }
+.prog { display: flex; gap: 6px; margin-bottom: 26px; align-items: center }
+.prog i { flex: 1; height: 6px; border-radius: 3px; background: rgba(159,21,21,.2) }
+.prog i.on { background: var(--red) }
+.prog span { font-weight: 800; font-size: 13px; white-space: nowrap; margin-left: 8px }
+.btn { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px; text-transform: uppercase; border: 3px solid var(--red); background: var(--red); color: #fff; border-radius: 14px; padding: 16px 26px; cursor: pointer; min-height: 56px }
+.btn:disabled { opacity: .45; cursor: default }
+.btn.ghost { background: transparent; color: var(--red) }
+.btn.wide { width: 100%; margin-top: 12px }
+.auth { display: grid; gap: 12px; margin-top: 28px }
+.auth .btn { display: flex; align-items: center; justify-content: center; gap: 10px }
+.auth .ya { background: #fff; color: #000; border-color: #1a1a1a }
+.auth .vk { background: #fff; color: #000; border-color: #1a1a1a }
+.auth b { display: inline-block; width: 28px; height: 28px; line-height: 28px; border-radius: 8px; color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 14px }
+.ya b { background: #FC3F1D } .vk b { background: #0077FF }
+.note { font-weight: 600; font-size: 13px; color: var(--ink); margin-top: 16px; line-height: 1.4 }
+.err { color: var(--red); font-weight: 800; margin-top: 16px; font-size: 15px }
+.cards { display: grid; gap: 12px; margin-top: 24px }
+.card { text-align: left; width: 100%; display: flex; gap: 14px; align-items: center; font-family: inherit; background: rgba(255,255,255,.55); border: 3px dashed var(--red); border-radius: 16px; padding: 14px; cursor: pointer; color: var(--red); min-height: 72px }
+.card img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; flex: none }
+.card .nm { font-weight: 900; text-transform: uppercase; font-size: 18px; line-height: 1.1 }
+.card .tx { font-weight: 600; font-size: 14px; color: var(--ink); margin-top: 4px }
+.card .dot { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--red); flex: none }
+.card.sel { background: var(--red); border-style: solid; color: #fff }
+.card.sel .tx { color: #ffd9d9 }
+.card.sel .dot { background: #fff; border-color: #fff; box-shadow: inset 0 0 0 6px var(--red) }
+.sum { margin-top: 24px; display: grid; gap: 10px }
+.row { display: flex; gap: 12px; align-items: center; justify-content: space-between; background: rgba(255,255,255,.55); border: 3px solid var(--red); border-radius: 14px; padding: 12px 14px }
+.row small { display: block; font-weight: 800; font-size: 12px; text-transform: uppercase }
+.row strong { font-weight: 900; font-size: 17px; text-transform: uppercase }
+.row.empty strong { opacity: .5 }
+.row button { font-family: inherit; font-weight: 800; font-size: 13px; text-transform: uppercase; background: none; border: 0; color: var(--red); text-decoration: underline; cursor: pointer; padding: 8px }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; gap: 12px; justify-content: center; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--bg) 70%, rgba(232,230,230,0)) }
+.bar .btn { flex: 1; max-width: 350px }
+.bar .btn.ghost { flex: 0 0 auto }
+.who { font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 8px }
+[hidden] { display: none !important }
