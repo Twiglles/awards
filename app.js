@@ -97,9 +97,15 @@
     next.onclick = send;
   }
 
+  function answers() {
+    var r = [];
+    N.forEach(function (n) { var v = S.choices[n.id]; if (v) r.push({ n: n.title, c: cname(n, v) }); });
+    return r;
+  }
+
   function send() {
     next.disabled = true; next.textContent = 'Отправляем…'; err = '';
-    var p = C.demo && S.session === 'demo' ? Promise.resolve({ ok: true }) : api({ action: 'vote', token: S.session, choices: S.choices });
+    var p = C.demo && S.session === 'demo' ? Promise.resolve({ ok: true }) : api({ action: 'vote', token: S.session, answers: answers() });
     p.then(function (r) {
       if (r && r.ok) { S.done = true; S.choices = {}; if (S.session !== 'demo') save(); return render(); }
       if (r && r.error === 'voted') { S.done = true; save(); return render(); }

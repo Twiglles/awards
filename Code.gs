@@ -5,7 +5,7 @@ var SESSION_SEC = 21600;
 function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 function sheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet(), s = ss.getSheetByName('Голоса');
-  if (!s) { s = ss.insertSheet('Голоса'); s.appendRow(['voter', 'name', 'time', 'choices']); s.setFrozenRows(1); s.getRange('A:A').setNumberFormat('@'); }
+  if (!s) { s = ss.insertSheet('Голоса'); s.appendRow(['voter', 'name', 'time']); s.setFrozenRows(1); s.getRange('A:A').setNumberFormat('@'); }
   return s;
 }
 function doGet() { return out({ ok: true, app: 'golos' }); }
@@ -68,13 +68,23 @@ function auth(b) {
 function vote(b) {
   var c = CacheService.getScriptCache(), j = c.get('t_' + b.token);
   if (!j) return { error: 'auth' };
-  var id = JSON.parse(j), ch = {};
-  Object.keys(b.choices || {}).slice(0, 50).forEach(function (k) { ch[String(k).slice(0, 40)] = String(b.choices[k]).slice(0, 40); });
+  var id = JSON.parse(j), ans = [];
+  (b.answers || []).slice(0, 50).forEach(function (x) {
+    if (x && x.n && x.c) ans.push({ n: String(x.n).slice(0, 80), c: String(x.c).slice(0, 120) });
+  });
+  if (!ans.length) return { error: 'empty' };
   var lock = LockService.getScriptLock();
   lock.waitLock(25000);
   try {
     if (hasVoted(id.key)) return { error: 'voted' };
-    sheet().appendRow([id.key, id.name, new Date(), JSON.stringify(ch)]);
+    var s = sheet(), head = s.getRange(1, 1, 1, Math.max(3, s.getLastColumn())).getValues()[0], row = [id.key, id.name, new Date()];
+    ans.forEach(function (x) {
+      var i = head.indexOf(x.n);
+      if (i < 0) { head.push(x.n); i = head.length - 1; s.getRange(1, i + 1).setValue(x.n); }
+      row[i] = x.c;
+    });
+    for (var k = 0; k < row.length; k++) if (row[k] === undefined) row[k] = '';
+    s.appendRow(row);
     c.put('v_' + id.key, '1', SESSION_SEC);
   } finally { lock.releaseLock(); }
   return { ok: true };
