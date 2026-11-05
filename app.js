@@ -2,6 +2,7 @@
   var C = window.GOLOS, N = C.nominations, SK = 'golos_state';
   var $ = function (id) { return document.getElementById(id); };
   var view = $('view'), prog = $('prog'), bar = $('bar'), back = $('back'), next = $('next');
+  if (/[?&]reset\b/.test(location.search)) { try { localStorage.removeItem(SK); } catch (e) {} history.replaceState(null, '', location.pathname); }
   var S = load() || { step: 0, choices: {}, session: null, name: '', done: false };
   var err = '';
 
@@ -100,7 +101,7 @@
     next.disabled = true; next.textContent = 'Отправляем…'; err = '';
     var p = C.demo && S.session === 'demo' ? Promise.resolve({ ok: true }) : api({ action: 'vote', token: S.session, choices: S.choices });
     p.then(function (r) {
-      if (r && r.ok) { S.done = true; S.choices = {}; save(); return render(); }
+      if (r && r.ok) { S.done = true; S.choices = {}; if (S.session !== 'demo') save(); return render(); }
       if (r && r.error === 'voted') { S.done = true; save(); return render(); }
       if (r && r.error === 'auth') { S.session = null; err = 'Сессия истекла, войдите заново. Выбор сохранён.'; return go(0); }
       err = 'Не удалось отправить, попробуйте ещё раз.'; summary();
