@@ -52,7 +52,7 @@
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
       '</div></div>' +
-      '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.' + (C.policyUrl ? ' <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a>' : '') + '</p>' +
+      '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' + (C.policyUrl ? '<p class="note pol"><a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>' : '') +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
     $('avk').onclick = vkLogin;
     $('aya').onclick = yaLogin;
@@ -95,10 +95,14 @@
     Array.prototype.forEach.call(view.querySelectorAll('.line button'), function (b) { b.onclick = function () { go(+b.dataset.i); }; });
     back.onclick = function () { go(N.length); };
     var any = Object.keys(S.choices).length > 0, ag = $('agree');
-    function sync() { S.agree = ag.checked; save(); next.disabled = !(any && ag.checked); }
-    ag.onchange = sync; sync();
+    var lab = ag.parentNode;
+    next.disabled = !any;
+    ag.onchange = function () { S.agree = ag.checked; save(); lab.classList.remove('need'); };
     next.textContent = 'Отправить голос';
-    next.onclick = send;
+    next.onclick = function () {
+      if (!ag.checked) { lab.classList.add('need'); lab.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+      send();
+    };
   }
 
   function answers() {
