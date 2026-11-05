@@ -86,3 +86,4 @@ button { touch-action: manipulation }
 .card .line small { font-size: 11px }
 .note.hop { margin: 14px 0 0; text-align: center }
 .warn { margin-top: 14px; padding: 12px 14px; border: 1px solid var(--ac-h); border-radius: 4px; background: rgba(154,31,31,.18); font: 600 13px/1.45 Montserrat, sans-serif }
+.top .who button { min-height: 0; padding: 2px 0; border: 0; background: none; color: var(--ac-h); font: 700 12px Montserrat; cursor: pointer }

@@ -32,7 +32,9 @@
   function go(n) { S.step = n; err = ''; save(); render(); window.scrollTo(0, 0); }
 
   function render() {
-    $('who').textContent = S.name || '';
+    var wh = $('who');
+    wh.innerHTML = S.session ? esc(S.name || 'Вы вошли') + ' · <button id="out">Выйти</button>' : '';
+    if (S.session) $('out').onclick = function () { S = { step: 0, choices: {}, session: null, name: '', done: false }; save(); render(); window.scrollTo(0, 0); };
     prog.hidden = S.step === 0 || S.done;
     bar.hidden = S.step === 0 || S.done;
     if (S.done) return done();
