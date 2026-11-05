@@ -21,9 +21,15 @@
       });
   }
 
+  function titleHtml() {
+    var t = esc(C.title), w = t.split(' ');
+    return w.length > 1 ? w.slice(0, -1).join(' ') + ' <mark>' + w[w.length - 1] + '</mark>' : '<mark>' + t + '</mark>';
+  }
+
   function go(n) { S.step = n; err = ''; save(); render(); window.scrollTo(0, 0); }
 
   function render() {
+    $('who').textContent = S.name || '';
     prog.hidden = S.step === 0 || S.done;
     bar.hidden = S.step === 0 || S.done;
     if (S.done) return done();
@@ -39,12 +45,12 @@
   }
 
   function intro() {
-    view.innerHTML = '<h1>' + esc(C.title) + '</h1><div class="sub">' + esc(C.subtitle) + '</div><p class="t">' + esc(C.intro) + '</p>' +
-      '<div class="auth">' +
-      '<button class="btn vk" id="avk"><b>VK</b>Войти через ВКонтакте</button>' +
-      '<button class="btn ya" id="aya"><b>Я</b>Войти через Яндекс</button>' +
-      (C.demo ? '<button class="btn ghost" id="ademo">Тестовый вход</button>' : '') +
-      '</div><p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' +
+    view.innerHTML = '<div class="tag">Голосование</div><h1>' + titleHtml() + '</h1><div class="sub">' + esc(C.subtitle) + '</div><p class="t">' + esc(C.intro) + '</p>' +
+      '<div class="card"><div class="auth">' +
+      '<button class="vk" id="avk"><b>VK</b>Войти через ВКонтакте</button>' +
+      '<button class="ya" id="aya"><b>Я</b>Войти через Яндекс</button>' +
+      (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
+      '</div></div><p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
     $('avk').onclick = vkLogin;
     $('aya').onclick = yaLogin;
@@ -54,13 +60,13 @@
   function nomination(i) {
     var n = N[i], sel = S.choices[n.id];
     progress(i);
-    view.innerHTML = (S.name ? '<div class="who">' + esc(S.name) + '</div>' : '') + '<h2>' + esc(n.title) + '</h2>' + (n.hint ? '<div class="hint">' + esc(n.hint) + '</div>' : '') +
+    view.innerHTML = '<div class="tag">Номинация ' + (i + 1) + '</div><h2>' + esc(n.title) + '</h2>' + (n.hint ? '<div class="hint">' + esc(n.hint) + '</div>' : '') +
       '<div class="cards">' + n.candidates.map(function (c) {
-        return '<button class="card' + (sel === c.id ? ' sel' : '') + '" data-id="' + esc(c.id) + '">' +
+        return '<button class="opt' + (sel === c.id ? ' sel' : '') + '" data-id="' + esc(c.id) + '">' +
           (c.photo ? '<img src="' + esc(c.photo) + '" alt="">' : '') +
           '<div><div class="nm">' + esc(c.name) + '</div>' + (c.text ? '<div class="tx">' + esc(c.text) + '</div>' : '') + '</div><span class="dot"></span></button>';
       }).join('') + '</div>';
-    Array.prototype.forEach.call(view.querySelectorAll('.card'), function (el) {
+    Array.prototype.forEach.call(view.querySelectorAll('.opt'), function (el) {
       el.onclick = function () { S.choices[n.id] = S.choices[n.id] === el.dataset.id ? undefined : el.dataset.id; if (S.choices[n.id] === undefined) delete S.choices[n.id]; save(); nomination(i); };
     });
     back.hidden = false;
@@ -77,12 +83,12 @@
 
   function summary() {
     progress(N.length);
-    view.innerHTML = '<h2>Проверьте выбор</h2><div class="hint">После отправки изменить голос нельзя.</div><div class="sum">' +
+    view.innerHTML = '<div class="tag">Итог</div><h2>Проверьте <mark>выбор</mark></h2><div class="hint">После отправки изменить голос нельзя.</div><div class="card">' +
       N.map(function (n, i) {
         var v = S.choices[n.id];
-        return '<div class="row' + (v ? '' : ' empty') + '"><div><small>' + esc(n.title) + '</small><strong>' + esc(v ? cname(n, v) : 'Не выбрано') + '</strong></div><button data-i="' + (i + 1) + '">Изменить</button></div>';
+        return '<div class="line' + (v ? '' : ' empty') + '"><div><small>' + esc(n.title) + '</small><strong>' + esc(v ? cname(n, v) : 'Не выбрано') + '</strong></div><button data-i="' + (i + 1) + '">Изменить</button></div>';
       }).join('') + '</div>' + (err ? '<div class="err">' + esc(err) + '</div>' : '');
-    Array.prototype.forEach.call(view.querySelectorAll('.row button'), function (b) { b.onclick = function () { go(+b.dataset.i); }; });
+    Array.prototype.forEach.call(view.querySelectorAll('.line button'), function (b) { b.onclick = function () { go(+b.dataset.i); }; });
     back.onclick = function () { go(N.length); };
     var any = Object.keys(S.choices).length > 0;
     next.disabled = !any;
@@ -103,7 +109,7 @@
 
   function done() {
     prog.hidden = true;
-    view.innerHTML = '<h1>Спасибо!</h1><div class="sub">Ваш голос принят</div><p class="t">Результаты опубликуем после окончания голосования.</p>';
+    view.innerHTML = '<div class="tag">Готово</div><h1>Спасибо!</h1><div class="sub">Ваш голос <mark>принят</mark></div><p class="t">Результаты опубликуем после окончания голосования.</p>';
   }
 
   function yaLogin() {
