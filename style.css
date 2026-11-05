@@ -81,3 +81,6 @@ button { touch-action: manipulation }
 .agree.need { color: var(--warn) }
 .agree.need input { border-color: var(--warn); animation: shake .35s }
 @keyframes shake { 25% { transform: translateX(-4px) } 75% { transform: translateX(4px) } }
+.card .line { padding: 9px 0 }
+.card .line b, .card .line strong { font: 800 15px Montserrat }
+.card .line small { font-size: 11px }
