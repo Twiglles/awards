@@ -69,5 +69,5 @@ button { touch-action: manipulation }
   .opt:hover { transform: translateY(-1px) }
 }
 .auth .ic { width: 28px; height: 28px; flex: none }
-.legal { display: table; margin: 28px auto 0; padding: 8px 14px; border: 1px solid var(--ln); border-radius: 4px; color: rgba(245,243,240,.5); font: 600 12px Montserrat, sans-serif; text-decoration: none; transition: border-color .15s, color .15s }
-.legal:hover { border-color: var(--ac-h); color: var(--tx) }
+.legal { display: table; margin: 28px auto 0; padding: 8px 14px; color: rgba(245,243,240,.5); font: 600 12px Montserrat, sans-serif; text-decoration: underline; text-underline-offset: 3px; transition: color .15s }
+.legal:hover { color: var(--tx) }
