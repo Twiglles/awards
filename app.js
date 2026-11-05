@@ -91,7 +91,7 @@
         var v = S.choices[n.id];
         return '<div class="line' + (v ? '' : ' empty') + '"><div><small>' + esc(n.title) + '</small><strong>' + esc(v ? cname(n, v) : 'Не выбрано') + '</strong></div><button data-i="' + (i + 1) + '">Изменить</button></div>';
       }).join('') + '</div>' +
-      '<label class="agree"><input type="checkbox" id="agree"' + (S.agree ? ' checked' : '') + '><span>Я даю согласие на обработку моих персональных данных (идентификатор и имя аккаунта) в целях учёта голоса' + (C.policyUrl ? ' в соответствии с <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политикой обработки персональных данных</a>' : '') + '</span></label>' + (err ? '<div class="err">' + esc(err) + '</div>' : '');
+      '<label class="agree"><input type="checkbox" id="agree"' + (S.agree ? ' checked' : '') + '><span>Я даю согласие на обработку моих персональных данных в целях учёта голоса' + (C.policyUrl ? ' в соответствии с <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политикой обработки персональных данных</a>' : '') + '</span></label>' + (err ? '<div class="err">' + esc(err) + '</div>' : '');
     Array.prototype.forEach.call(view.querySelectorAll('.line button'), function (b) { b.onclick = function () { go(+b.dataset.i); }; });
     back.onclick = function () { go(N.length); };
     var any = Object.keys(S.choices).length > 0, ag = $('agree');
