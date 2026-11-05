@@ -7,7 +7,7 @@ window.GOLOS = {
   yandexClientId: '9a4cdc984bda471d9292e49baea06533',
   vkClientId: '54878572',
   redirectUri: location.origin + location.pathname,
-  policyUrl: '',
+  policyUrl: 'https://twiglles.ru/privacy',
   allowSkip: true,
   nominations: [
     {
