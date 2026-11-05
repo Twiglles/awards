@@ -2,7 +2,7 @@ window.GOLOS = {
   title: 'Премия Твиглс',
   subtitle: 'Выберите лучших в каждой номинации',
   intro: 'Голосование займёт пару минут. Чтобы голос был честным, войдите через ВКонтакте или Яндекс: один аккаунт, один голос.',
-  api: '',
+  api: 'https://script.google.com/macros/s/AKfycby-mp_UUWOjGxserG4AmL2tZTM_m_StBdfj3A2YzIg4qAxvHx_kwuL-kVlbOo71Na2e/exec',
   demo: true,
   yandexClientId: '9a4cdc984bda471d9292e49baea06533',
   vkClientId: '',
