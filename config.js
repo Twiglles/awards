@@ -4,7 +4,7 @@ window.GOLOS = {
   intro: 'Голосование займёт пару минут. Чтобы голос был честным, войдите через ВКонтакте или Яндекс: один аккаунт, один голос.',
   api: '',
   demo: true,
-  yandexClientId: '',
+  yandexClientId: '9a4cdc984bda471d9292e49baea06533',
   vkClientId: '',
   redirectUri: location.origin + location.pathname,
   allowSkip: true,
