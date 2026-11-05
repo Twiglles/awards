@@ -76,3 +76,4 @@ button { touch-action: manipulation }
 .agree input:checked { background: var(--ac); border-color: var(--ac) }
 .agree input:checked::after { content: ''; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px,-1px) }
 .agree a { color: var(--tx) }
+.note a { color: var(--mut); text-decoration: none; border-bottom: 1px solid var(--ln) }

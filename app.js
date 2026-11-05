@@ -31,9 +31,6 @@
 
   function render() {
     $('who').textContent = S.name || '';
-    var lg = $('legal');
-    lg.href = C.policyUrl || '#';
-    lg.hidden = !(C.policyUrl && !S.done && S.step > N.length);
     prog.hidden = S.step === 0 || S.done;
     bar.hidden = S.step === 0 || S.done;
     if (S.done) return done();
@@ -55,12 +52,8 @@
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
       '</div></div>' +
-      '<label class="agree"><input type="checkbox" id="agree"' + (S.agree ? ' checked' : '') + '><span>Я даю согласие на обработку моих персональных данных (идентификатор и имя аккаунта ВКонтакте или Яндекса) в целях учёта голоса' + (C.policyUrl ? ' в соответствии с <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политикой обработки персональных данных</a>' : '') + '</span></label>' +
-      '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' +
+      '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.' + (C.policyUrl ? ' <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a>' : '') + '</p>' +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
-    var btns = view.querySelectorAll('.auth button'), ag = $('agree');
-    function sync() { S.agree = ag.checked; save(); Array.prototype.forEach.call(btns, function (b) { b.disabled = !ag.checked; }); }
-    ag.onchange = sync; sync();
     $('avk').onclick = vkLogin;
     $('aya').onclick = yaLogin;
     if (C.demo) $('ademo').onclick = function () { S.session = 'demo'; S.name = 'Тест'; go(1); };
@@ -97,11 +90,13 @@
       N.map(function (n, i) {
         var v = S.choices[n.id];
         return '<div class="line' + (v ? '' : ' empty') + '"><div><small>' + esc(n.title) + '</small><strong>' + esc(v ? cname(n, v) : 'Не выбрано') + '</strong></div><button data-i="' + (i + 1) + '">Изменить</button></div>';
-      }).join('') + '</div>' + (err ? '<div class="err">' + esc(err) + '</div>' : '');
+      }).join('') + '</div>' +
+      '<label class="agree"><input type="checkbox" id="agree"' + (S.agree ? ' checked' : '') + '><span>Я даю согласие на обработку моих персональных данных (идентификатор и имя аккаунта) в целях учёта голоса' + (C.policyUrl ? ' в соответствии с <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политикой обработки персональных данных</a>' : '') + '</span></label>' + (err ? '<div class="err">' + esc(err) + '</div>' : '');
     Array.prototype.forEach.call(view.querySelectorAll('.line button'), function (b) { b.onclick = function () { go(+b.dataset.i); }; });
     back.onclick = function () { go(N.length); };
-    var any = Object.keys(S.choices).length > 0;
-    next.disabled = !any;
+    var any = Object.keys(S.choices).length > 0, ag = $('agree');
+    function sync() { S.agree = ag.checked; save(); next.disabled = !(any && ag.checked); }
+    ag.onchange = sync; sync();
     next.textContent = 'Отправить голос';
     next.onclick = send;
   }
