@@ -53,7 +53,7 @@ function hasVoted(key) {
   var s = sheet();
   if (s.getLastRow() < 2) return false;
   var f = s.getRange(2, 1, s.getLastRow() - 1, 1).createTextFinder(key).matchEntireCell(true).findNext();
-  if (f) c.put('v_' + key, '1', SESSION_SEC);
+  if (f) c.put('v_' + key, '1', 60);
   return !!f;
 }
 
@@ -85,7 +85,9 @@ function vote(b) {
     });
     for (var k = 0; k < row.length; k++) if (row[k] === undefined) row[k] = '';
     s.appendRow(row);
-    c.put('v_' + id.key, '1', SESSION_SEC);
+    c.put('v_' + id.key, '1', 60);
   } finally { lock.releaseLock(); }
   return { ok: true };
 }
+
+function forgetTest() { CacheService.getScriptCache().removeAll(['v_ya:1023286026']); }
