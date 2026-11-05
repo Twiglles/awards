@@ -56,9 +56,16 @@
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
       '</div></div>' +
-      (inApp() ? '<div class="warn">Вы открыли страницу во встроенном браузере приложения, вход может не сработать. Откройте её в обычном браузере на своём устройстве.</div>' : '<p class="note hop">Откроется страница ВКонтакте или Яндекса: подтвердите вход, и вы автоматически вернётесь сюда, чтобы продолжить.</p>') +
+      '<p class="note hop">Откроется страница ВКонтакте или Яндекса: подтвердите вход, и вы автоматически вернётесь сюда, чтобы продолжить.</p>' +
+      '<details class="help"' + (inApp() ? ' open' : '') + '><summary>? Проблемы со входом</summary><ol><li>Откройте страницу в обычном браузере (Chrome, Safari, Яндекс Браузер), а не внутри Telegram, Instagram и других приложений.</li><li>Скопируйте ссылку и вставьте её в адресную строку браузера: <button id="cp">Скопировать ссылку</button></li><li>Если вход не завершился, нажмите кнопку входа ещё раз или выберите другой способ.</li><li>Если приложение ВКонтакте или Яндекс предлагает «Открыть в приложении», вернитесь в браузер и подтвердите вход там.</li></ol></details>' +
       (C.policyUrl ? '<p class="note pol"><a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>' : '') +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
+    $('cp').onclick = function () {
+      var b = $('cp'), u = location.origin + location.pathname;
+      function ok() { b.textContent = 'Ссылка скопирована'; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, function () { prompt('Скопируйте ссылку', u); });
+      else prompt('Скопируйте ссылку', u);
+    };
     $('avk').onclick = vkLogin;
     $('aya').onclick = yaLogin;
     if (C.demo) $('ademo').onclick = function () { S.session = 'demo'; S.name = 'Тест'; go(1); };
