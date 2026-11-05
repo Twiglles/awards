@@ -27,6 +27,8 @@
     return w.length > 1 ? w.slice(0, -1).join(' ') + ' <mark>' + w[w.length - 1] + '</mark>' : '<mark>' + t + '</mark>';
   }
 
+  function inApp() { return /Telegram|Instagram|FBAN|FBAV|VKClient|VK\/|OKApp|Viber|Line\/|WhatsApp|; wv\)/i.test(navigator.userAgent); }
+
   function go(n) { S.step = n; err = ''; save(); render(); window.scrollTo(0, 0); }
 
   function render() {
@@ -52,6 +54,7 @@
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
       '</div></div>' +
+      (inApp() ? '<div class="warn">Вы открыли страницу во встроенном браузере приложения. Вход может не сработать: откройте её в обычном браузере (меню ⋯ → «Открыть в браузере»).</div>' : '') +
       '<p class="note hop">Откроется страница ВКонтакте или Яндекса: подтвердите вход, и вы автоматически вернётесь сюда, чтобы продолжить.</p>' +
       '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' + (C.policyUrl ? '<p class="note pol"><a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>' : '') +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
@@ -149,7 +152,11 @@
 
   function fromProvider() {
     var h = new URLSearchParams(location.hash.slice(1)), q = new URLSearchParams(location.search), o = S.oauth, body = null;
-    if (!o) return Promise.resolve();
+    if (!o) {
+      if (h.get('access_token')) { history.replaceState(null, '', location.pathname); err = 'Вход прошёл в другом окне. Откройте страницу в обычном браузере и повторите.'; }
+      else if (q.get('code') && q.get('device_id')) { history.replaceState(null, '', location.pathname); err = 'Вход прошёл в другом окне. Откройте страницу в обычном браузере и повторите.'; }
+      return Promise.resolve();
+    }
     if (o.p === 'ya' && h.get('access_token') && h.get('state') === o.state) body = { action: 'auth', provider: 'ya', token: h.get('access_token') };
     if (o.p === 'vk' && q.get('code') && q.get('state') === o.state) body = { action: 'auth', provider: 'vk', code: q.get('code'), device_id: q.get('device_id'), verifier: o.ver, redirect: C.redirectUri, state: q.get('state') };
     if (!body) { if (h.get('error') || q.get('error')) err = 'Вход не выполнен. Попробуйте ещё раз.'; return Promise.resolve(); }
