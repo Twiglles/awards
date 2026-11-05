@@ -71,3 +71,8 @@ button { touch-action: manipulation }
 .auth .ic { width: 28px; height: 28px; flex: none }
 .legal { display: table; margin: 28px auto 0; padding: 8px 14px; color: rgba(245,243,240,.5); font: 600 12px Montserrat, sans-serif; text-decoration: none; transition: color .15s }
 .legal:hover { color: var(--tx) }
+.agree { display: flex; gap: 12px; align-items: flex-start; margin-top: 16px; font: 500 13px/1.5 Montserrat, sans-serif; color: var(--mut); cursor: pointer }
+.agree input { appearance: none; flex: none; width: 22px; height: 22px; margin: 1px 0 0; border: 2px solid var(--ln); border-radius: 4px; background: var(--card2); cursor: pointer; display: grid; place-content: center }
+.agree input:checked { background: var(--ac); border-color: var(--ac) }
+.agree input:checked::after { content: ''; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px,-1px) }
+.agree a { color: var(--tx) }

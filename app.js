@@ -33,7 +33,7 @@
     $('who').textContent = S.name || '';
     var lg = $('legal');
     lg.href = C.policyUrl || '#';
-    lg.hidden = !(C.policyUrl && !S.done && (S.step === 0 || S.step > N.length));
+    lg.hidden = !(C.policyUrl && !S.done && S.step > N.length);
     prog.hidden = S.step === 0 || S.done;
     bar.hidden = S.step === 0 || S.done;
     if (S.done) return done();
@@ -54,8 +54,13 @@
       '<button class="vk" id="avk"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#0077FF"/><g transform="translate(4 4) scale(1)"><path fill="#fff" d="M12.785 16.241s.288-.032.436-.194c.136-.148.131-.427.131-.427s-.02-1.304.587-1.496c.596-.19 1.364 1.259 2.177 1.815.615.422 1.082.33 1.082.33l2.175-.03s1.137-.07.598-.964c-.044-.073-.314-.661-1.618-1.869-1.366-1.265-1.183-1.06.462-3.246.999-1.33 1.398-2.142 1.273-2.489-.119-.331-.854-.244-.854-.244l-2.449.015s-.182-.025-.316.056c-.132.079-.217.263-.217.263s-.387 1.028-.903 1.903c-1.09 1.85-1.526 1.948-1.704 1.834-.414-.267-.31-1.075-.31-1.648 0-1.793.272-2.54-.53-2.734-.266-.064-.462-.107-1.143-.114-.874-.009-1.614.003-2.033.208-.279.136-.494.44-.363.457.162.022.529.099.723.363.251.342.242 1.11.242 1.11s.144 2.11-.337 2.373c-.33.18-.783-.188-1.755-1.865-.498-.86-.874-1.81-.874-1.81s-.072-.177-.202-.272c-.157-.115-.377-.151-.377-.151l-2.327.015s-.35.01-.478.162c-.114.135-.009.414-.009.414s1.82 4.258 3.883 6.403c1.89 1.968 4.04 1.838 4.04 1.838h.974z"/></g></svg>Войти через ВКонтакте</button>' +
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
-      '</div></div><p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' +
+      '</div></div>' +
+      '<label class="agree"><input type="checkbox" id="agree"' + (S.agree ? ' checked' : '') + '><span>Я даю согласие на обработку моих персональных данных (идентификатор и имя аккаунта ВКонтакте или Яндекса) в целях учёта голоса' + (C.policyUrl ? ' в соответствии с <a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политикой обработки персональных данных</a>' : '') + '</span></label>' +
+      '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
+    var btns = view.querySelectorAll('.auth button'), ag = $('agree');
+    function sync() { S.agree = ag.checked; save(); Array.prototype.forEach.call(btns, function (b) { b.disabled = !ag.checked; }); }
+    ag.onchange = sync; sync();
     $('avk').onclick = vkLogin;
     $('aya').onclick = yaLogin;
     if (C.demo) $('ademo').onclick = function () { S.session = 'demo'; S.name = 'Тест'; go(1); };
