@@ -84,3 +84,4 @@ button { touch-action: manipulation }
 .card .line { padding: 9px 0 }
 .card .line b, .card .line strong { font: 800 15px Montserrat }
 .card .line small { font-size: 11px }
+.note.hop { margin: 14px 0 0; text-align: center }

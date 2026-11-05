@@ -52,6 +52,7 @@
       '<button class="ya" id="aya"><img class="ic" src="yandex.png" alt="" width="28" height="28">Войти через Яндекс</button>' +
       (C.demo ? '<button id="ademo">Тестовый вход</button>' : '') +
       '</div></div>' +
+      '<p class="note hop">Откроется страница ВКонтакте или Яндекса: подтвердите вход, и вы автоматически вернётесь сюда, чтобы продолжить.</p>' +
       '<p class="note">Мы получаем только идентификатор и имя аккаунта, чтобы учесть один голос. Пароли нам не передаются.</p>' + (C.policyUrl ? '<p class="note pol"><a href="' + esc(C.policyUrl) + '" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>' : '') +
       (err ? '<div class="err">' + esc(err) + '</div>' : '');
     $('avk').onclick = vkLogin;
