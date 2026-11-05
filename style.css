@@ -52,3 +52,19 @@ button:disabled { opacity: .45; cursor: default }
 .bar2 { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--card2); border-top: 1px solid var(--ln); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)) }
 .bar2 div { max-width: 640px; margin: 0 auto; display: flex; gap: 12px }
 .bar2 .p { flex: 1 }
+body { overflow-wrap: anywhere; -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100% }
+button { touch-action: manipulation }
+.opt:active { transform: scale(.99) }
+@media (max-width: 380px) {
+  body { font-size: 16px }
+  main { padding: 18px 12px }
+  .top { padding: 12px 14px }
+  .opt { padding: 12px; gap: 10px }
+  .opt img { width: 52px; height: 52px }
+  .card { padding: 16px 14px }
+  .bar2 { padding-left: 12px; padding-right: 12px }
+}
+@media (min-width: 700px) {
+  main { padding-top: 40px }
+  .opt:hover { transform: translateY(-1px) }
+}
