@@ -32,7 +32,8 @@
   function render() {
     $('who').textContent = S.name || '';
     var lg = $('legal');
-    if (C.policyUrl) { lg.href = C.policyUrl; lg.hidden = false; }
+    lg.href = C.policyUrl || '#';
+    lg.hidden = !(C.policyUrl && !S.done && (S.step === 0 || S.step > N.length));
     prog.hidden = S.step === 0 || S.done;
     bar.hidden = S.step === 0 || S.done;
     if (S.done) return done();
