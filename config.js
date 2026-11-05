@@ -5,7 +5,7 @@ window.GOLOS = {
   api: 'https://script.google.com/macros/s/AKfycby-mp_UUWOjGxserG4AmL2tZTM_m_StBdfj3A2YzIg4qAxvHx_kwuL-kVlbOo71Na2e/exec',
   demo: true,
   yandexClientId: '9a4cdc984bda471d9292e49baea06533',
-  vkClientId: '',
+  vkClientId: '54878572',
   redirectUri: location.origin + location.pathname,
   allowSkip: true,
   nominations: [

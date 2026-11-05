@@ -1,5 +1,5 @@
 /** @OnlyCurrentDoc */
-var VK_CLIENT_ID = '';
+var VK_CLIENT_ID = '54878572';
 var SESSION_SEC = 21600;
 
 function out(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
