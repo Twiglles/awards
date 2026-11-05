@@ -34,7 +34,7 @@ function identity(b) {
   if (b.provider === 'vk') {
     var t = post('https://id.vk.com/oauth2/auth', {
       grant_type: 'authorization_code', code: b.code, code_verifier: b.verifier,
-      redirect_uri: b.redirect, client_id: VK_CLIENT_ID, device_id: b.device_id, state: Utilities.getUuid()
+      redirect_uri: b.redirect, client_id: VK_CLIENT_ID, device_id: b.device_id, state: String(b.state || '')
     });
     if (!t || !t.user_id) return null;
     var name = '';

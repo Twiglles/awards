@@ -63,15 +63,15 @@
     progress(i);
     view.innerHTML = '<div class="tag">Номинация ' + (i + 1) + '</div><h2>' + esc(n.title) + '</h2>' + (n.hint ? '<div class="hint">' + esc(n.hint) + '</div>' : '') +
       '<div class="cards">' + n.candidates.map(function (c) {
-        return '<button class="opt' + (sel === c.id ? ' sel' : '') + '" data-id="' + esc(c.id) + '">' +
-          (c.photo ? '<img src="' + esc(c.photo) + '" alt="">' : '') +
+        return '<button class="opt' + (sel === c.id ? ' sel' : '') + '" aria-pressed="' + (sel === c.id) + '" data-id="' + esc(c.id) + '">' +
+          (c.photo ? '<img src="' + esc(c.photo) + '" alt="" width="60" height="60" loading="lazy" decoding="async">' : '') +
           '<div><div class="nm">' + esc(c.name) + '</div>' + (c.text ? '<div class="tx">' + esc(c.text) + '</div>' : '') + '</div><span class="dot"></span></button>';
       }).join('') + '</div>';
     Array.prototype.forEach.call(view.querySelectorAll('.opt'), function (el) {
       el.onclick = function () { S.choices[n.id] = S.choices[n.id] === el.dataset.id ? undefined : el.dataset.id; if (S.choices[n.id] === undefined) delete S.choices[n.id]; save(); nomination(i); };
     });
-    back.hidden = false;
-    back.onclick = function () { go(i === 0 ? 0 : S.step - 1); };
+    back.hidden = i === 0;
+    back.onclick = function () { go(S.step - 1); };
     next.disabled = !sel && !C.allowSkip;
     next.textContent = sel ? 'Далее' : 'Пропустить';
     next.onclick = function () { go(S.step + 1); };
@@ -84,6 +84,7 @@
 
   function summary() {
     progress(N.length);
+    back.hidden = false;
     view.innerHTML = '<div class="tag">Итог</div><h2>Проверьте <mark>выбор</mark></h2><div class="hint">После отправки изменить голос нельзя.</div><div class="card">' +
       N.map(function (n, i) {
         var v = S.choices[n.id];
@@ -108,7 +109,7 @@
     var p = C.demo && S.session === 'demo' ? Promise.resolve({ ok: true }) : api({ action: 'vote', token: S.session, answers: answers() });
     p.then(function (r) {
       if (r && r.ok) { S.done = true; S.choices = {}; if (S.session !== 'demo') save(); return render(); }
-      if (r && r.error === 'voted') { S.done = true; save(); return render(); }
+      if (r && r.error === 'voted') { S.done = true; S.was = true; save(); return render(); }
       if (r && r.error === 'auth') { S.session = null; err = 'Сессия истекла, войдите заново. Выбор сохранён.'; return go(0); }
       err = 'Не удалось отправить, попробуйте ещё раз.'; summary();
     }).catch(function () { err = 'Нет связи, попробуйте ещё раз.'; summary(); });
@@ -116,7 +117,9 @@
 
   function done() {
     prog.hidden = true;
-    view.innerHTML = '<div class="tag">Готово</div><h1>Спасибо!</h1><div class="sub">Ваш голос <mark>принят</mark></div><p class="t">Результаты опубликуем после окончания голосования.</p>';
+    view.innerHTML = S.was
+      ? '<div class="tag">Готово</div><h1>Вы уже <mark>голосовали</mark></h1><p class="t">С этого аккаунта голос уже принят, повторно проголосовать нельзя.</p>'
+      : '<div class="tag">Готово</div><h1>Спасибо!</h1><div class="sub">Ваш голос <mark>принят</mark></div><p class="t">Результаты опубликуем после окончания голосования.</p>';
   }
 
   function yaLogin() {
@@ -140,13 +143,13 @@
     var h = new URLSearchParams(location.hash.slice(1)), q = new URLSearchParams(location.search), o = S.oauth, body = null;
     if (!o) return Promise.resolve();
     if (o.p === 'ya' && h.get('access_token') && h.get('state') === o.state) body = { action: 'auth', provider: 'ya', token: h.get('access_token') };
-    if (o.p === 'vk' && q.get('code') && q.get('state') === o.state) body = { action: 'auth', provider: 'vk', code: q.get('code'), device_id: q.get('device_id'), verifier: o.ver, redirect: C.redirectUri };
+    if (o.p === 'vk' && q.get('code') && q.get('state') === o.state) body = { action: 'auth', provider: 'vk', code: q.get('code'), device_id: q.get('device_id'), verifier: o.ver, redirect: C.redirectUri, state: q.get('state') };
     if (!body) { if (h.get('error') || q.get('error')) err = 'Вход не выполнен. Попробуйте ещё раз.'; return Promise.resolve(); }
     history.replaceState(null, '', location.pathname);
     delete S.oauth; save();
     view.innerHTML = '<h2>Входим…</h2>';
     return api(body).then(function (r) {
-      if (r && r.session) { S.session = r.session; S.name = r.name || ''; if (r.voted) S.done = true; S.step = Math.max(S.step, 1); }
+      if (r && r.session) { S.session = r.session; S.name = r.name || ''; if (r.voted) { S.done = true; S.was = true; } S.step = Math.max(S.step, 1); }
       else err = 'Не удалось войти. Попробуйте ещё раз.';
       save();
     }).catch(function () { err = 'Нет связи, попробуйте ещё раз.'; });
