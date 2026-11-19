@@ -4,7 +4,7 @@
   var view = $('view'), prog = $('prog'), bar = $('bar'), back = $('back'), next = $('next');
   if (/[?&]reset\b/.test(location.search)) { try { localStorage.removeItem(SK); } catch (e) {} history.replaceState(null, '', location.pathname); }
   var S = load() || { step: 0, choices: {}, session: null, name: '', done: false };
-  var err = '';
+  var NONE = '_none', err = '';
 
   function load() { try { return JSON.parse(localStorage.getItem(SK)); } catch (e) { return null; } }
   function save() { try { localStorage.setItem(SK, JSON.stringify(S)); } catch (e) {} }
@@ -74,7 +74,7 @@
     var n = N[i], sel = S.choices[n.id];
     progress(i);
     view.innerHTML = '<div class="tag">Номинация ' + (i + 1) + '</div><h2>' + esc(n.title) + '</h2>' + (n.hint ? '<div class="hint">' + esc(n.hint) + '</div>' : '') +
-      '<div class="cards">' + n.candidates.map(function (c) {
+      '<div class="cards">' + n.candidates.concat([{ id: NONE, name: C.noneLabel || 'Не могу определиться', text: '' }]).map(function (c) {
         return '<button class="opt' + (sel === c.id ? ' sel' : '') + '" aria-pressed="' + (sel === c.id) + '" data-id="' + esc(c.id) + '">' +
           (c.photo ? '<img src="' + esc(c.photo) + '" alt="" width="60" height="60" loading="lazy" decoding="async">' : '') +
           '<div><div class="nm">' + esc(c.name) + '</div>' + (c.text ? '<div class="tx">' + esc(c.text) + '</div>' : '') + '</div><span class="dot"></span></button>';
@@ -84,12 +84,13 @@
     });
     back.hidden = i === 0;
     back.onclick = function () { go(S.step - 1); };
-    next.disabled = !sel && !C.allowSkip;
-    next.textContent = sel ? 'Далее' : 'Пропустить';
+    next.disabled = !sel;
+    next.textContent = 'Далее';
     next.onclick = function () { go(S.step + 1); };
   }
 
   function cname(n, id) {
+    if (id === NONE) return C.noneLabel || 'Не могу определиться';
     for (var k = 0; k < n.candidates.length; k++) if (n.candidates[k].id === id) return n.candidates[k].name;
     return '';
   }

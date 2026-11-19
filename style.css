@@ -94,3 +94,6 @@ button { touch-action: manipulation }
 .help li { margin-bottom: 8px }
 .help button { min-height: 0; padding: 6px 10px; font-size: 12px; margin-top: 6px }
 .help .fn { margin: 12px 0 0; font-size: 11px; opacity: .7 }
+.opt[data-id="_none"] { min-height: 56px; border-style: dashed }
+.opt[data-id="_none"] .nm { font-weight: 600; color: var(--mut) }
+.opt[data-id="_none"].sel .nm { color: #fff }

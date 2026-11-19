@@ -8,7 +8,7 @@ window.GOLOS = {
   vkClientId: '54878572',
   redirectUri: location.origin + location.pathname,
   policyUrl: 'https://twiglles.ru/privacy',
-  allowSkip: true,
+  noneLabel: 'Не могу определиться',
   nominations: [
     {
       id: 'n1',
