@@ -57,9 +57,29 @@ function hasVoted(key) {
   return !!f;
 }
 
+var MAX_FAIL_PER_MIN = 300;
+function sane(s, min, max) { return typeof s === 'string' && s.length >= min && s.length <= max && !/\s/.test(s); }
+function validAuth(b) {
+  if (b.provider === 'ya') return sane(b.token, 10, 512);
+  if (b.provider === 'vk') return sane(b.code, 10, 2048) && sane(b.device_id, 4, 256) && sane(b.verifier, 43, 128) && sane(b.redirect, 8, 300) && sane(String(b.state || ''), 1, 256);
+  return false;
+}
+function digest(s) {
+  return Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, s)).slice(0, 22);
+}
+
 function auth(b) {
+  if (!validAuth(b)) return { error: 'auth' };
+  var c = CacheService.getScriptCache(), win = 'f_' + Math.floor(Date.now() / 60000);
+  var bad = 'bad_' + digest(String(b.token || b.code));
+  if (c.get(bad)) return { error: 'auth' };
+  if (Number(c.get(win) || 0) >= MAX_FAIL_PER_MIN) return { error: 'busy' };
   var id = identity(b);
-  if (!id) return { error: 'auth' };
+  if (!id) {
+    c.put(bad, '1', 300);
+    c.put(win, String(Number(c.get(win) || 0) + 1), 120);
+    return { error: 'auth' };
+  }
   var t = Utilities.getUuid() + Utilities.getUuid();
   CacheService.getScriptCache().put('t_' + t, JSON.stringify(id), SESSION_SEC);
   return { session: t, name: id.name, voted: hasVoted(id.key) };
